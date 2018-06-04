@@ -33,19 +33,49 @@ class Checkers():
             row += 1
         return table
 
-    def find_piece(self,target,table):
+    def find_piece(self,target):
         p_row = None
         p_col = None
         row = 0
         while row < 8:
             col = 0
             while col < 8:
-                if target == table[row][col]:
+                if target == self.__table[row][col]:
                     p_row, p_col = row, col
                     row,col = 8 #Terminar ciclo
                 col += 1
             row += 1
         return p_row, p_col
+
+
+    def move_piece(self,piece,direction):
+        row, col = self.find_piece(piece) #Obtener la posicion de la ficha
+        if isinstance(self.__table[row][col],pieceA):
+            self.pieceA_movement(piece,direction)
+
+    def pieceA_movement(self,piece,direction):
+        row, col = self.find_piece(piece)
+        result = False
+        if direction == 1: #Si se mueve hacia la izquierda
+            object = self.available_position(row-1 ,col-1)
+            if object == '-':
+                self.__table[row-1][col-1] = self.__table[row][col]
+                self.__table[row][col] = '-'
+                result = True
+            if isinstance(object,pieceB): #Si lo que se encuentra en esa posicion es una ficha del oponente
+                object = self.available_position(row-2, col-2)
+                if object == '-':
+                    self.__table[row - 2][col - 2] = self.__table[row][col]
+                    self.__table[row - 1][col - 1] = '-'
+                    self.__table[row][col] = '-'
+                    result = True
+        return result
+
+    def available_position(self, row, col):
+        object = None #Objeto que se encuentra en esa posicion
+        if (0 <= row < 8) and (0 <= col < 8):  # Si la posicion a la que se moverá es válida
+            object = self.__table[row][col]
+        return object
 
     def get_table(self):
         return self.__table

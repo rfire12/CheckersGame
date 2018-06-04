@@ -5,5 +5,7 @@ class Piece():
     def __repr__(self):
         return self.__mask
 
+    def validate_move(self,row,col):
+
 
 
