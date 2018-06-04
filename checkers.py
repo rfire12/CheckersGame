@@ -33,5 +33,19 @@ class Checkers():
             row += 1
         return table
 
+    def find_piece(self,target,table):
+        p_row = None
+        p_col = None
+        row = 0
+        while row < 8:
+            col = 0
+            while col < 8:
+                if target == table[row][col]:
+                    p_row, p_col = row, col
+                    row,col = 8 #Terminar ciclo
+                col += 1
+            row += 1
+        return p_row, p_col
+
     def get_table(self):
         return self.__table
