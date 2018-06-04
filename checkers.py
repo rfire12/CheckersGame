@@ -1,4 +1,4 @@
-import check
+import piece
 
 #Funcion: make_table()
 #Parametros: Ninguno
@@ -14,7 +14,7 @@ def make_table():
         while col < 8:
             if (((row + col) % 2) == 0) and (row < 3 or row > 4):
                 char = str(chr(char_in_ascii)) #Convertir un numero a un string
-                fic = check.Ficha(char)
+                fic = piece.Ficha(char)
                 table[row].append(fic)
                 char_in_ascii += 1
             else:
