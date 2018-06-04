@@ -1,4 +1,5 @@
-import piece
+import pieceA
+import pieceB
 
 class Checkers():
     def __init__(self):
@@ -18,7 +19,10 @@ class Checkers():
             while col < 8:
                 if (((row + col) % 2) == 0) and (row < 3 or row > 4):
                     char = str(chr(char_in_ascii)) #Convertir un numero a un string
-                    fic = piece.Piece(char)
+                    if row < 3:
+                        fic = pieceA.PieceA(char)
+                    else:
+                        fic = pieceB.PieceB(char)
                     table[row].append(fic)
                     char_in_ascii += 1
                 else:
