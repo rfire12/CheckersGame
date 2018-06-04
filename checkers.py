@@ -1,13 +1,13 @@
 import piece
 
-# Funcion: make_table()
-# Parametros: Ninguno
-# Objetivo: Crear el tablero de damas
-# Retorno: Lista con objetos de tipo 'check'
 class Checkers():
     def __init__(self):
         self.__table = self.make_table()
 
+    # Funcion: make_table()
+    # Parametros: Ninguno
+    # Objetivo: Crear el tablero de damas
+    # Retorno: Lista con objetos de tipo 'check'
     def make_table(self):
         table = []
         row = 0
