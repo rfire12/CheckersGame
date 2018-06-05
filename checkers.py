@@ -20,9 +20,9 @@ class Checkers():
                 if (((row + col) % 2) == 0) and (row < 3 or row > 4):
                     char = str(chr(char_in_ascii)) #Convertir un numero a un string
                     if row < 3:
-                        fic = pieceA.PieceA(char)
-                    else:
                         fic = pieceB.PieceB(char)
+                    else:
+                        fic = pieceA.PieceA(char)
                     table[row].append(fic)
                     char_in_ascii += 1
                 else:
@@ -40,9 +40,9 @@ class Checkers():
         while row < 8:
             col = 0
             while col < 8:
-                if target == self.__table[row][col]:
+                if self.__table[row][col] != '-' and target == self.__table[row][col].get_mask():
                     p_row, p_col = row, col
-                    row,col = 8 #Terminar ciclo
+                    row,col = 8, 8 #Terminar ciclo
                 col += 1
             row += 1
         return p_row, p_col
@@ -50,26 +50,56 @@ class Checkers():
 
     def move_piece(self,piece,direction):
         row, col = self.find_piece(piece) #Obtener la posicion de la ficha
-        if isinstance(self.__table[row][col],pieceA):
-            self.pieceA_movement(piece,direction)
+        if row != None and col != None:
+            if isinstance(self.__table[row][col],pieceA.PieceA):
+                self.pieceA_move(piece,direction)
+            elif isinstance(self.__table[row][col],pieceB.PieceB):
+                self.pieceB_move(piece, direction)
+        return "Movimiento invalido"
 
-    def pieceA_movement(self,piece,direction):
+    def pieceA_move(self,piece,direction):
         row, col = self.find_piece(piece)
         result = False
-        if direction == 1: #Si se mueve hacia la izquierda
-            object = self.available_position(row-1 ,col-1)
+        if direction == 1: #Si se mueve a la izquierda
+            col1, col2 = col - 1, col - 2
+        else:
+            col1, col2 = col + 1, col + 2
+        object = self.available_position(row - 1, col1)
+        if object == '-':
+            self.__table[row - 1][col1] = self.__table[row][col]
+            self.__table[row][col] = '-'
+            result = True
+        if isinstance(object,pieceB.PieceB): #Si lo que se encuentra en esa posicion es una ficha del oponente
+            object = self.available_position(row - 2, col2)
             if object == '-':
-                self.__table[row-1][col-1] = self.__table[row][col]
+                self.__table[row - 2][col2] = self.__table[row][col]
+                self.__table[row - 1][col2] = '-'
                 self.__table[row][col] = '-'
                 result = True
-            if isinstance(object,pieceB): #Si lo que se encuentra en esa posicion es una ficha del oponente
-                object = self.available_position(row-2, col-2)
-                if object == '-':
-                    self.__table[row - 2][col - 2] = self.__table[row][col]
-                    self.__table[row - 1][col - 1] = '-'
-                    self.__table[row][col] = '-'
-                    result = True
         return result
+
+    def pieceB_move(self,piece,direction):
+        row, col = self.find_piece(piece)
+        result = False
+        if direction == 1: #Si se mueve a la izquierda
+            col1, col2 = col - 1, col - 2
+        else:
+            col1, col2 = col + 1, col + 2
+        object = self.available_position(row + 1, col1)
+        if object == '-':
+            self.__table[row + 1][col1] = self.__table[row][col]
+            self.__table[row][col] = '-'
+            result = True
+        if isinstance(object,pieceA.PieceA): #Si lo que se encuentra en esa posicion es una ficha del oponente
+            object = self.available_position(row + 2, col2)
+            if object == '-':
+                self.__table[row + 2][col2] = self.__table[row][col]
+                self.__table[row + 1][col2] = '-'
+                self.__table[row][col] = '-'
+                result = True
+        return result
+
+
 
     def available_position(self, row, col):
         object = None #Objeto que se encuentra en esa posicion
