@@ -60,7 +60,7 @@ class Checkers():
     def pieceA_move(self,piece,direction):
         row, col = self.find_piece(piece)
         result = False
-        if direction == 1: #Si se mueve a la izquierda
+        if direction == '1': #Si se mueve a la izquierda
             col1, col2 = col - 1, col - 2
         else:
             col1, col2 = col + 1, col + 2
@@ -73,7 +73,7 @@ class Checkers():
             object = self.available_position(row - 2, col2)
             if object == '-':
                 self.__table[row - 2][col2] = self.__table[row][col]
-                self.__table[row - 1][col2] = '-'
+                self.__table[row - 1][col1] = '-'
                 self.__table[row][col] = '-'
                 result = True
         return result
@@ -81,7 +81,7 @@ class Checkers():
     def pieceB_move(self,piece,direction):
         row, col = self.find_piece(piece)
         result = False
-        if direction == 1: #Si se mueve a la izquierda
+        if direction == '1': #Si se mueve a la izquierda
             col1, col2 = col - 1, col - 2
         else:
             col1, col2 = col + 1, col + 2
@@ -94,11 +94,10 @@ class Checkers():
             object = self.available_position(row + 2, col2)
             if object == '-':
                 self.__table[row + 2][col2] = self.__table[row][col]
-                self.__table[row + 1][col2] = '-'
+                self.__table[row + 1][col1] = '-'
                 self.__table[row][col] = '-'
                 result = True
         return result
-
 
 
     def available_position(self, row, col):
