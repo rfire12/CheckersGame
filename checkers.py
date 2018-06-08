@@ -53,9 +53,14 @@ class Checkers():
         if row != None and col != None:
             if isinstance(self.__table[row][col],pieceA.PieceA):
                 self.pieceA_move(piece,direction)
+                row, col = self.find_piece(piece)
+                if row == 0:
+                    self.__table[row][col].set_queen()
             elif isinstance(self.__table[row][col],pieceB.PieceB):
                 self.pieceB_move(piece, direction)
-        return "Movimiento invalido"
+                row, col = self.find_piece(piece)
+                if row == 7:
+                    self.__table[row][col].set_queen()
 
     def pieceA_move(self,piece,direction):
         row, col = self.find_piece(piece)
