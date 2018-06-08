@@ -11,7 +11,11 @@ while end == False:
     jug = 1
     print("\nJugador \nIngrese la ficha a mover: ")
     piece = input()
+    ver_direction = 0
+    if len(piece) == 2:
+        print("1-Arriba 2-Abajo")
+        ver_direction = input()
     print("1-Izquierda 2-Derecha")
     direction = input()
-    tablero.move_piece(piece,direction)
+    tablero.move_piece(piece,direction,ver_direction)
     print('\n' * 5)

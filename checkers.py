@@ -48,18 +48,23 @@ class Checkers():
         return p_row, p_col
 
 
-    def move_piece(self,piece,direction):
+    def move_piece(self,piece,hor_direction,ver_direction):
         row, col = self.find_piece(piece) #Obtener la posicion de la ficha
         if row != None and col != None:
-            if isinstance(self.__table[row][col],pieceA.PieceA):
-                self.pieceA_move(piece,direction)
+            if self.__table[row][col].get_queen() == True:
+                if ver_direction == "1":
+                    self.pieceA_move(piece, hor_direction)
+                else:
+                    self.pieceB_move(piece, hor_direction)
+            elif isinstance(self.__table[row][col],pieceA.PieceA):
+                self.pieceA_move(piece,hor_direction)
                 row, col = self.find_piece(piece)
-                if row == 0:
+                if row == 0: #Convertir a reina
                     self.__table[row][col].set_queen()
             elif isinstance(self.__table[row][col],pieceB.PieceB):
-                self.pieceB_move(piece, direction)
+                self.pieceB_move(piece, hor_direction)
                 row, col = self.find_piece(piece)
-                if row == 7:
+                if row == 7: #Convertir a reina
                     self.__table[row][col].set_queen()
 
     def pieceA_move(self,piece,direction):
@@ -84,10 +89,11 @@ class Checkers():
     def eat_pieceA(self,piece,direction):
         stop = True
         piece_row, piece_col = self.find_piece(piece)
+        actual_piece = self.__table[piece_row][piece_col]  # Guardar la pieza en una variable
         if direction == '1': #Si se mueve a la izquierda
             object1 = self.available_position(piece_row-1, piece_col-1)
             object2 = self.available_position(piece_row-2, piece_col-2)
-            if isinstance(object1, pieceB.PieceB) and object2 == '-': #Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and a(type(actual_piece) != type(object1)) and object2 == '-'): #Si lo que se encuentra en esa posicion es una ficha del oponente
                 self.__table[piece_row-2][piece_col-2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row-1][piece_col-1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -95,7 +101,7 @@ class Checkers():
         if direction == '2': #Si se mueve a la derecha
             object1 = self.available_position(piece_row-1, piece_col+1)
             object2 = self.available_position(piece_row-2, piece_col+2)
-            if isinstance(object1, pieceB.PieceB) and object2 == '-': #Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'): #Si lo que se encuentra en esa posicion es una ficha del oponente
                 self.__table[piece_row-2][piece_col+2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row-1][piece_col+1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -106,11 +112,12 @@ class Checkers():
 
     def eat_pieceB(self,piece,direction):
         stop = True
-        piece_row, piece_col = self.find_piece(piece)
+        piece_row, piece_col = self.find_piece(piece) #Encontrar la posicion de la pieza
+        actual_piece = self.__table[piece_row][piece_col] #Guardar la pieza en una variable
         if direction == '1':  # Si se mueve a la izquierda
             object1 = self.available_position(piece_row + 1, piece_col - 1)
             object2 = self.available_position(piece_row + 2, piece_col - 2)
-            if isinstance(object1,pieceA.PieceA) and object2 == '-':  # Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'):  # Si lo que se encuentra en esa posicion es una ficha del oponente
                 self.__table[piece_row + 2][piece_col - 2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row + 1][piece_col - 1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -118,7 +125,7 @@ class Checkers():
         if direction == '2':  # Si se mueve a la derecha
             object1 = self.available_position(piece_row + 1, piece_col + 1)
             object2 = self.available_position(piece_row + 2, piece_col + 2)
-            if isinstance(object1,pieceA.PieceA) and object2 == '-':  # Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'):  # Si lo que se encuentra en esa posicion es una ficha del oponente
                 self.__table[piece_row + 2][piece_col + 2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row + 1][piece_col + 1] = '-'
                 self.__table[piece_row][piece_col] = '-'
