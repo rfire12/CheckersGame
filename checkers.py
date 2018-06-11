@@ -93,7 +93,7 @@ class Checkers():
         if direction == '1': #Si se mueve a la izquierda
             object1 = self.available_position(piece_row-1, piece_col-1)
             object2 = self.available_position(piece_row-2, piece_col-2)
-            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and a(type(actual_piece) != type(object1)) and object2 == '-'): #Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object1 != '-' and object2 == '-'): #Comer ficha del usuario B OR Si es una reina de cualquiera de los dos usuarios, comer ficha del oponente
                 self.__table[piece_row-2][piece_col-2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row-1][piece_col-1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -101,7 +101,7 @@ class Checkers():
         if direction == '2': #Si se mueve a la derecha
             object1 = self.available_position(piece_row-1, piece_col+1)
             object2 = self.available_position(piece_row-2, piece_col+2)
-            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'): #Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1, pieceB.PieceB) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object1 != '-' and object2 == '-'): #Comer ficha del usuario B OR Si es una reina de cualquiera de los dos usuarios, comer ficha del oponente
                 self.__table[piece_row-2][piece_col+2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row-1][piece_col+1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -117,7 +117,7 @@ class Checkers():
         if direction == '1':  # Si se mueve a la izquierda
             object1 = self.available_position(piece_row + 1, piece_col - 1)
             object2 = self.available_position(piece_row + 2, piece_col - 2)
-            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'):  # Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object1 != '-' and object2 == '-'):  #Comer ficha del usuario B OR Si es una reina de cualquiera de los dos usuarios, comer ficha del oponente
                 self.__table[piece_row + 2][piece_col - 2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row + 1][piece_col - 1] = '-'
                 self.__table[piece_row][piece_col] = '-'
@@ -125,7 +125,7 @@ class Checkers():
         if direction == '2':  # Si se mueve a la derecha
             object1 = self.available_position(piece_row + 1, piece_col + 1)
             object2 = self.available_position(piece_row + 2, piece_col + 2)
-            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object2 == '-'):  # Si lo que se encuentra en esa posicion es una ficha del oponente
+            if (isinstance(object1,pieceA.PieceA) and object2 == '-') or (actual_piece.get_queen() == True and (type(actual_piece) != type(object1)) and object1 != '-' and object2 == '-'):  #Comer ficha del usuario B OR Si es una reina de cualquiera de los dos usuarios, comer ficha del oponente
                 self.__table[piece_row + 2][piece_col + 2] = self.__table[piece_row][piece_col]
                 self.__table[piece_row + 1][piece_col + 1] = '-'
                 self.__table[piece_row][piece_col] = '-'
