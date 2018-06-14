@@ -50,6 +50,7 @@ class Checkers():
 
     def move_piece(self,piece,hor_direction,ver_direction):
         row, col = self.find_piece(piece) #Obtener la posicion de la ficha
+        result = False;
         if row != None and col != None:
             if self.__table[row][col].get_queen() == True:
                 if ver_direction == "1":
@@ -140,6 +141,52 @@ class Checkers():
         if (0 <= row < 8) and (0 <= col < 8):  # Si la posicion a la que se moverá es válida
             object = self.__table[row][col]
         return object
+
+    """  def check_block(self,turn):
+      table_copy = self.__table
+      cont = 1
+      ver_direction = 0
+      for row in self.__table:
+          for piece in row:
+              cont = 1
+              while cont <= 2:
+                  ver_direction = 1
+                  if turn == 1 and isinstance(piece, pieceA):  # Si el turno es de las fichas A
+                      if piece.get_queen():
+                          while ver_direction <= 2:
+                              self.move_piece(piece.get_mask(), cont, ver_direction)
+                              ver_direction += 1
+                      else:
+                          self.move_piece(piece.get_mask(),cont,0)
+                  elif turn == 2 and isinstance(piece, pieceB):
+                      if piece.get_queen():
+                          while ver_direction <= 2:
+                              self.move_piece(piece.get_mask(), cont, ver_direction)
+                              ver_direction += 1
+                      else:
+                          self.move_piece(piece.get_mask(),cont,0)
+                  cont += 1 """
+
+    def end_game(self):
+        Apieces, Bpieces = 0, 0
+        result = False
+        winner = None
+        for row in self.__table:
+            for piece in row:
+                if isinstance(piece,pieceA.PieceA):
+                    Apieces += 1
+                if isinstance(piece,pieceB.PieceB):
+                    Bpieces += 1
+        if Apieces == 0:
+            result = True
+            winner = "Mayusculas"
+        if Bpieces == 0:
+            result = True
+            winner = "Minusculas"
+        return result, winner
+
+
+
 
     def get_table(self):
         return self.__table

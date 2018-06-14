@@ -19,3 +19,7 @@ while end == False:
     direction = input()
     tablero.move_piece(piece,direction,ver_direction)
     print('\n' * 5)
+    end, winner = tablero.end_game()
+    if end == True:
+        print("El ganador es el de las piezas " + winner)
+
