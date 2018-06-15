@@ -6,6 +6,8 @@ import copy
 class Checkers():
     def __init__(self):
         self.__table = self.make_table()
+        self.__captured_pieces_by_A = 0
+        self.__captured_pieces_by_B = 0
 
     # Funcion: make_table()
     # Parametros: Ninguno
@@ -49,10 +51,9 @@ class Checkers():
             row += 1
         return p_row, p_col
 
-
-    def move_piece(self,piece,hor_direction,ver_direction):
+    def move_piece(self, piece, hor_direction, ver_direction):
         row, col = self.find_piece(piece) #Obtener la posicion de la ficha
-        result = False;
+        result = False
         if row != None and col != None:
             if self.__table[row][col].get_queen() == True:
                 if ver_direction == "1":
@@ -70,7 +71,7 @@ class Checkers():
                 if row == 7: #Convertir a reina
                     self.__table[row][col].set_queen()
 
-    def pieceA_move(self,piece,direction):
+    def pieceA_move(self, piece, direction):
         row, col = self.find_piece(piece)
         next_col = col - 1 if direction == '1' else col + 1  #Si se mueve a la izquierda o si se mueve a la derecha
         self.eat_pieceA(piece, direction)
@@ -79,7 +80,7 @@ class Checkers():
             self.__table[row - 1][next_col] = self.__table[row][col]
             self.__table[row][col] = '-'
 
-    def pieceB_move(self,piece,direction):
+    def pieceB_move(self, piece, direction):
         row, col = self.find_piece(piece)
         next_col = col - 1 if direction == '1' else col + 1  # Si se mueve a la izquierda o si se mueve a la derecha
         self.eat_pieceB(piece, direction)
@@ -190,18 +191,22 @@ class Checkers():
         else:
             self.move_piece(piece.get_mask(), hor_direction, 0) #Como no es una reina, no se puede mover verticalmente en cualquier direccion
 
-
+    def count_pieces(self):
+        a_pieces, b_pieces = 0, 0
+        for row in self.__table:
+            for piece1 in row:
+                if isinstance(piece1, pieceA.PieceA):
+                    a_pieces += 1
+                if isinstance(piece1, pieceB.PieceB):
+                    b_pieces += 1
+        return a_pieces, b_pieces
 
     def end_game(self):
-        a_pieces, b_pieces = 0, 0
         result = False
         winner = None
-        for row in self.__table:
-            for piece in row:
-                if isinstance(piece,pieceA.PieceA):
-                    a_pieces += 1
-                if isinstance(piece,pieceB.PieceB):
-                    b_pieces += 1
+        a_pieces, b_pieces = self.count_pieces()
+        self.__captured_pieces_by_A = 12 - b_pieces
+        self.__captured_pieces_by_B = 12 - a_pieces
         if a_pieces == 0:
             result = True
             winner = "Mayusculas"
@@ -212,3 +217,9 @@ class Checkers():
 
     def get_table(self):
         return self.__table
+
+    def get_captured_pieces_by_A(self):
+        return self.__captured_pieces_by_A
+
+    def get_captured_pieces_by_B(self):
+        return self.__captured_pieces_by_B
