@@ -1,5 +1,6 @@
 import pieceA
 import pieceB
+import piece
 import copy
 
 class Checkers():
@@ -136,49 +137,60 @@ class Checkers():
             return
         self.eat_pieceB(piece, direction)
 
-
     def available_position(self, row, col):
-        object = None #Objeto que se encuentra en esa posicion
+        object = None # Objeto que se encuentra en esa posicion
         if (0 <= row < 8) and (0 <= col < 8):  # Si la posicion a la que se moverá es válida
             object = self.__table[row][col]
         return object
 
-    def check_block(self,turn):
+    def check_block(self, turn):
         table_copy = copy.deepcopy(self.__table) #Clonar lista a otra
-        pos = 0
-        cont = 0
-        result = False
+        pos, cont, result = 0, 0, False
         for row in self.__table:
-            for piece in row:
+            for piece1 in row:
                 hor_direction = 1
                 while hor_direction <= 2:
-                    if turn == 1 and isinstance(piece, pieceA.PieceA):  # Si el turno es de las fichas A
-                        self.check_block_move(piece,hor_direction)
-                    elif turn == 2 and isinstance(piece, pieceB.PieceB):
-                        self.check_block_move(piece,hor_direction)
-                    hor_direction += 1
-        # Si las listas son iguales, significa que no se han podido realizar movimientos, por lo tanto, el tablero esta bloqueado
+                    if isinstance(piece1, piece.Piece):
+                        row1, col1 = self.find_piece(piece1.get_mask())
+                    if turn == 1 and isinstance(piece1, pieceA.PieceA):  # Si el turno es de las fichas A
+                        self.check_block_move(piece1, hor_direction)
+                    elif turn == 2 and isinstance(piece1, pieceB.PieceB):
+                        self.check_block_move(piece1, hor_direction)
+                    result = self.check_move(piece1, row1, col1)
+                    hor_direction = (hor_direction + 1) if (result == False) else 3
+
+        result = self.compare_lists(table_copy)
+        self.__table = copy.deepcopy(table_copy)
+        return result
+
+    def compare_lists(self, list):
+        pos, cont, result = 0, 0, False
         while pos < 8:
-            if table_copy[pos] == self.__table[pos]:
+            if list[pos] == self.__table[pos]:
                 cont += 1
             pos += 1
         if cont == 8:
             result = True
-
-        for x in self.__table:
-            print(*x)
-        print('\n')
-        self.__table = copy.deepcopy(table_copy)
         return result
 
-    def check_block_move(self,piece,hor_direction):
+    def check_move(self, piece1, row, col):
+        result = False
+        if isinstance(piece1, piece.Piece):
+            row2, col2 = self.find_piece(piece1.get_mask())
+            if row != row2 or col != col2:  # Si la ficha pudo moverse, entonces se dejara de intentar moverla rompiendo el ciclo
+                result = True
+        return result
+
+    def check_block_move(self, piece, hor_direction):
         ver_direction = 1
-        if piece.get_queen():
+        if piece.get_queen(): #Si es una reina
             while ver_direction <= 2:
-                self.move_piece(piece.get_mask(), hor_direction, ver_direction)
+                self.move_piece(piece.get_mask(), ver_direction, hor_direction) #
                 ver_direction += 1
         else:
             self.move_piece(piece.get_mask(), hor_direction, 0) #Como no es una reina, no se puede mover verticalmente en cualquier direccion
+
+
 
     def end_game(self):
         a_pieces, b_pieces = 0, 0

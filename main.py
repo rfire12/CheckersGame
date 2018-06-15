@@ -5,8 +5,9 @@ tablero = checkers.Checkers()
 
 print("Jugador 1 son las fichas minusculas \n Jugador 2: Mayusculas")
 end = False
+cont = 0
 while end == False:
-    cont = 0
+
     for x in tablero.get_table():
         print(*x)
     jug = 1
@@ -26,6 +27,7 @@ while end == False:
         turn = 1
     else:
         turn = 2
+    cont += 1
     end = tablero.check_block(turn)
     if end == True:
         print("El ganador es el de las piezas " + winner)

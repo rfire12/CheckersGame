@@ -2,6 +2,6 @@ import piece
 
 
 class PieceA(piece.Piece):
-    def __init__(self, mask):
+    def __init__(self,mask):
         piece.Piece.__init__(self,mask)
 
