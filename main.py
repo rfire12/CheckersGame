@@ -29,10 +29,12 @@ while end == False:
         turn = 2
     cont += 1
     if end == True:
-        print("El ganador es el de las piezas " + winner)
+        print(winner)
 
     if tablero.check_block(turn):
-        if tablero.get_captured_pieces_by_A() == 12:
+        if tablero.get_captured_pieces_by_A() == tablero.get_captured_pieces_by_B():
+            print("Han empatado!")
+        elif tablero.get_captured_pieces_by_A() == 12:
             print("El ganador es el de las piezas minusculas")
         else:
             print("El ganador es el de las piezas mayusculas")
