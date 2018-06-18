@@ -12,7 +12,7 @@ while end == False:
         print(*x)
     jug = 1
     mandat = tablero.mandatory_eating(turn)
-    if mandat.__len__() is not 0:
+    if len(mandat) is not 0:
         print(mandat)
     else:
         print("El turno es de: "+str(turn))

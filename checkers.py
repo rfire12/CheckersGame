@@ -205,24 +205,30 @@ class Checkers():
     def mandatory_eating(self, turn):
         table_copy = copy.deepcopy(self.__table)  # Clonar lista a otra
         result = False
-        piecesEat = [] #Piezas que pueden comer
+        ver_direction = 0
+        piecesEat = {} #Piezas que pueden comer
         for row in self.__table:
             for piece1 in row:
                 hor_direction = 1
                 while hor_direction <= 2:
                     if isinstance(piece1, piece.Piece):
                         row1, col1 = self.find_piece(piece1.get_mask())
-                        self.mandatory_eating_move_piece(piece1, hor_direction, turn)
+                        ver_direction = self.mandatory_eating_move_piece(piece1, hor_direction, turn)
                         result = self.check_move(piece1, row1, col1)
-                    hor_direction += 1
                     self.__table = copy.deepcopy(table_copy)
                     if result: #Si el resultado es True es porque la ficha puede comer
-                        piecesEat.append(piece1.get_mask())
+                        if piece1.get_queen():
+                            piecesEat[piece1.get_mask()[0]] = [str(ver_direction), str(hor_direction)]
+                        else:
+                            piecesEat[piece1.get_mask()[0]] = [str(hor_direction), str(ver_direction)]
                         result = False
+                    hor_direction += 1
         return piecesEat
 
     def mandatory_eating_move_piece(self, piece1, hor_direction, turn):
         ver_direction = 1
+        vertical = 0
+        row, col = self.find_piece(piece1.get_mask())
         #La siguiente condicion es para que el codigo solo se ejecute cuando el turno le corresponda a ficha correspondiente
         if (turn == 1 and isinstance(piece1,pieceA.PieceA)) or (turn == 2 and isinstance(piece1,pieceB.PieceB)):
             if piece1.get_queen():
@@ -231,12 +237,17 @@ class Checkers():
                         self.eat_pieceA(piece1.get_mask(), str(ver_direction))
                     else:
                         self.eat_pieceB(piece1.get_mask(), str(ver_direction))
+                    result = self.check_move(piece1, row, col)
+                    if result:
+                        vertical = ver_direction
+                        ver_direction = 3 #romper ciclo
                     ver_direction += 1
             else:
                 if isinstance(piece1, pieceA.PieceA):
                     self.eat_pieceA(piece1.get_mask(), str(hor_direction))
                 elif isinstance(piece1, pieceB.PieceB):
                     self.eat_pieceB(piece1.get_mask(), str(hor_direction))
+        return vertical
 
     def end_game(self):
         result = False
