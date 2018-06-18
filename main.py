@@ -21,7 +21,7 @@ def start():
             valid = valid_piece(piece, turn, mandatory)
             if valid is True:
                 vertical, horizontal = scan(piece)
-                if piece in mandatory and (horizontal != mandatory[piece[0]][0] or vertical != mandatory[piece[0]][1]):
+                if piece in mandatory and ([horizontal, vertical] not in mandatory[piece[0]]):
                     print("\n!!!!La ficha debe de comer!!!!")
                     valid = False
                 else:
@@ -88,7 +88,7 @@ Objetivo: Leer movimientos de las fichas
 Retorno: Posicion a la que se desea mover las fichas
 """
 def scan_movement(row,col):
-    vertical, horizontal = '0','0'
+    vertical, horizontal = '0', '0'
     valid = False
     if table.get_table()[row][col].get_queen():
         while valid is False:
