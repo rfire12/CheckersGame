@@ -179,7 +179,7 @@ class Checkers():
         result = False
         if isinstance(piece1, piece.Piece):
             row2, col2 = self.find_piece(piece1.get_mask())
-            if row != row2 or col != col2:  # Si la ficha pudo moverse, entonces se dejara de intentar moverla rompiendo el ciclo
+            if row != row2 or col != col2:
                 result = True
         return result
 
