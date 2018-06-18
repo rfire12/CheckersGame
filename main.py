@@ -5,12 +5,17 @@ tablero = checkers.Checkers()
 
 print("Jugador 1 son las fichas minusculas \n Jugador 2: Mayusculas")
 end = False
-cont = 0
+cont = 1
+turn = 1
 while end == False:
-
     for x in tablero.get_table():
         print(*x)
     jug = 1
+    mandat = tablero.mandatory_eating(turn)
+    if mandat.__len__() is not 0:
+        print(mandat)
+    else:
+        print("El turno es de: "+str(turn))
     print("\nJugador \nIngrese la ficha a mover: ")
     piece = input()
     ver_direction = 0
@@ -22,12 +27,13 @@ while end == False:
     tablero.move_piece(piece,direction,ver_direction)
     print('\n' * 5)
     end, winner = tablero.end_game()
-
     if (cont % 2) == 0:
         turn = 1
     else:
         turn = 2
     cont += 1
+
+
     if end == True:
         print(winner)
 
