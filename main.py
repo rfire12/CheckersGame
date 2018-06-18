@@ -14,7 +14,7 @@ def start():
     while end is False:
         valid = False
         while valid is False:
-            print_table(table)
+            print_table()
             mandatory = table.mandatory_eating(turn)
             print("Juegador " + str(turn) + "\nElija la ficha a mover: ")
             piece = input()
