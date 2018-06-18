@@ -3,16 +3,19 @@ import pieceB
 import piece
 import copy
 
+
 class Checkers():
     def __init__(self):
         self.__table = self.make_table()
         self.__captured_pieces_by_A = 0
         self.__captured_pieces_by_B = 0
 
-    # Funcion: make_table()
-    # Parametros: Ninguno
-    # Objetivo: Crear el tablero de damas
-    # Retorno: Lista con objetos de tipo 'check'
+    """
+    Funcion: make_table
+    Parametros: Ninguno
+    Objetivo: Crear el tablero de damas
+    Retorno: Lista con objetos de tipo 'check'
+    """
     def make_table(self):
         table = []
         row = 0
@@ -37,6 +40,12 @@ class Checkers():
             row += 1
         return table
 
+    """
+    Funcion: find_piece
+    Objetivo: Obtener la posicion de una ficha
+    Paramertros: target (Char); Ficha que se desea ubicar en el tablero
+    Retorno: Posicion de la ficha en X y en Y
+    """
     def find_piece(self,target):
         p_row = None
         p_col = None
@@ -51,6 +60,14 @@ class Checkers():
             row += 1
         return p_row, p_col
 
+    """
+    Funcion: move_piece
+    Objetivo: Mover una ficha
+    Parametros: piece (Char); Pieza a mover
+                hor_direction (Char); Direccion horizontal a la que se desea mover la ficha
+                ver_direction (Char); Direccion vertical a la que se desea mover la ficha (Solo para las reinas)
+    Retorno: Ninguno
+    """
     def move_piece(self, piece, hor_direction, ver_direction):
         row, col = self.find_piece(piece) #Obtener la posicion de la ficha
         result = False
@@ -71,6 +88,13 @@ class Checkers():
                 if row == 7: #Convertir a reina
                     self.__table[row][col].set_queen()
 
+    """
+    Funcion: pieceA_move
+    Objetivo: Mover las fichas minusculas
+    Parametros: piece (Char); Pieza a mover
+                direction; Direccion horizontal a la que se movera la ficha
+    Retorno: Ninguno
+    """
     def pieceA_move(self, piece, direction):
         row, col = self.find_piece(piece)
         next_col = col - 1 if direction == '1' else col + 1  #Si se mueve a la izquierda o si se mueve a la derecha
@@ -80,6 +104,13 @@ class Checkers():
             self.__table[row - 1][next_col] = self.__table[row][col]
             self.__table[row][col] = '-'
 
+    """
+    Funcion: pieceB_move
+    Objetivo: Mover las fichas mayusculas
+    Parametros: piece (Char); Pieza a mover
+                direction (Char); Direccion horizontal a la que se movera la ficha
+    Retorno: Ninguno
+    """
     def pieceB_move(self, piece, direction):
         row, col = self.find_piece(piece)
         next_col = col - 1 if direction == '1' else col + 1  # Si se mueve a la izquierda o si se mueve a la derecha
@@ -89,8 +120,14 @@ class Checkers():
             self.__table[row + 1][next_col] = self.__table[row][col]
             self.__table[row][col] = '-'
 
-
-    def eat_pieceA(self,piece,direction):
+    """
+    Funcion: pieceA_eat
+    Objetivo: Comer una ficha mayuscula
+    Parametros: piece (Char); Pieza a mover
+                direction (Char); Direccion horizontal a la que se movera la ficha
+    Retorno: Ninguno
+    """
+    def eat_pieceA(self, piece, direction):
         stop = True
         piece_row, piece_col = self.find_piece(piece)
         actual_piece = self.__table[piece_row][piece_col]  # Guardar la pieza en una variable
@@ -114,6 +151,13 @@ class Checkers():
             return
         self.eat_pieceA(piece,direction)
 
+    """
+    Funcion: pieceB_eat
+    Objetivo: Comer una ficha minuscula
+    Parametros: piece (Char); Pieza a mover
+                direction (Char); Direccion horizontal a la que se movera la ficha
+    Retorno: Ninguno
+    """
     def eat_pieceB(self,piece,direction):
         stop = True
         piece_row, piece_col = self.find_piece(piece) #Encontrar la posicion de la pieza
@@ -138,12 +182,25 @@ class Checkers():
             return
         self.eat_pieceB(piece, direction)
 
+    """
+    Funcion: available_position
+    Objetivo: Revisar si una posicion es valida en el tablero
+    Parametros: row (Char); 
+                col (Char);
+    Retorno: Objeto que se encuentra en esa posicion o None si la posicion es invalida
+    """
     def available_position(self, row, col):
         object = None # Objeto que se encuentra en esa posicion
         if (0 <= row < 8) and (0 <= col < 8):  # Si la posicion a la que se moverá es válida
             object = self.__table[row][col]
         return object
 
+    """
+    Funcion: check_block
+    Objetivo: Revisar si el tablero se encuentra bloqueado
+    Parametros: turn (Integer); Turno del jugador al que le toca mover
+    Retorno: True: Si el tablero esta bloqueado; False: Si el tablero no esta bloqueado
+    """
     def check_block(self, turn):
         table_copy = copy.deepcopy(self.__table) #Clonar lista a otra
         for row in self.__table:
@@ -162,8 +219,28 @@ class Checkers():
         self.__table = copy.deepcopy(table_copy)
         return result
 
+    """
+    Funcion: check_block_move_piece
+    Objetivo: Intentar mover una ficha para saber si puede moverse
+    Parametros: piece1 (Piece); Pieza a comprobar
+                hor_direction (Char); Direccion horizontal a la que se movera
+    Retorno: Ninguno
+    """
+    def check_block_move_piece(self, piece, hor_direction):
+        ver_direction = 1
+        if piece.get_queen():  # Si es una reina
+            while ver_direction <= 2:
+                self.move_piece(piece.get_mask(), ver_direction, hor_direction)  #
+                ver_direction += 1
+        else:
+            self.move_piece(piece.get_mask(), hor_direction, 0)  # Como no es una reina, no se mueve verticalmente
 
-
+    """
+    Funcion: compare_lists
+    Objetivo: Comparar un tablero con el tablero del juego
+    Parametros: list; Lista a comparar 
+    Retorno: True: Si los tableros son iguales; False: Si los tableros son distintos
+    """
     def compare_lists(self, list):
         pos, cont, result = 0, 0, False
         while pos < 8:
@@ -174,7 +251,14 @@ class Checkers():
             result = True
         return result
 
-    #Saber si una ficha se ha movido
+    """
+    Funcion: check_move
+    Objetivo: Revisar si una ficha ha cambiado su posicion
+    Parametros: piece1 (Piece); Pieza a comprobar
+                row (Integer); Fila en que estaba la ficha 
+                col (Integer); Columna en que establa la ficha
+    Retorno: True: Si la ficha se ha movido; False: Si la ficha no se ha movido
+    """
     def check_move(self, piece1, row, col):
         result = False
         if isinstance(piece1, piece.Piece):
@@ -183,15 +267,12 @@ class Checkers():
                 result = True
         return result
 
-    def check_block_move_piece(self, piece, hor_direction):
-        ver_direction = 1
-        if piece.get_queen(): #Si es una reina
-            while ver_direction <= 2:
-                self.move_piece(piece.get_mask(), ver_direction, hor_direction) #
-                ver_direction += 1
-        else:
-            self.move_piece(piece.get_mask(), hor_direction, 0) #Como no es una reina, no se puede mover verticalmente en cualquier direccion
-
+    """
+    Funcion: count_pieces
+    Objetivo: Contar las piezas que quedan en el tablero de cada jugador
+    Parametros: Ninguno
+    Retorno: Cantidad de fichas de cada jugador
+    """
     def count_pieces(self):
         a_pieces, b_pieces = 0, 0
         for row in self.__table:
@@ -202,6 +283,12 @@ class Checkers():
                     b_pieces += 1
         return a_pieces, b_pieces
 
+    """
+    Funcion: mandatory_eating
+    Objetivo: Conocer las fichas que estan obligadas a comer
+    Parametros: turn (Integer); Turno del jugador al que le toca mover
+    Retorno: Diccionario con las piezas que estan obligadas a comer. La pieza contiene la posicion a la que debe comer.
+    """
     def mandatory_eating(self, turn):
         table_copy = copy.deepcopy(self.__table)  # Clonar lista a otra
         result = False
@@ -225,6 +312,14 @@ class Checkers():
                     hor_direction += 1
         return piecesEat
 
+    """
+    Funcion: mandatory_eating_move_piece
+    Objetivo: Mover una ficha para saber si puede comer
+    Parametros: piece1 (Piece): Pieza que se intenta mover
+                hor_direction (Char): Direccion horizontal a la que se intentara mover la ficha
+                turn (Integer); Turno del jugador al que le toca mover
+    Retorno: Posicion vertical a la que comio (Solo interesa si es una reina)
+    """
     def mandatory_eating_move_piece(self, piece1, hor_direction, turn):
         ver_direction = 1
         vertical = 0
@@ -249,6 +344,13 @@ class Checkers():
                     self.eat_pieceB(piece1.get_mask(), str(hor_direction))
         return vertical
 
+    """
+    Funcion: mandatory_eating_move_piece
+    Objetivo: Saber si el juego debe terminar
+    Parametros: Ninguno
+    Retorno: True: Si el juego debe terminar; False: Si el juego debe seguir; 
+             Winner: Ganador de la partida
+    """
     def end_game(self):
         result = False
         winner = None
@@ -266,6 +368,8 @@ class Checkers():
             winner = "Han empatado"
         return result, winner
 
+
+    #Las siguientes funciones son getters de los atributos de la clase
     def get_table(self):
         return self.__table
 
