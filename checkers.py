@@ -203,6 +203,7 @@ class Checkers():
     """
     def check_block(self, turn):
         table_copy = copy.deepcopy(self.__table) #Clonar lista a otra
+        row1, col1 = 0, 0
         for row in self.__table:
             for piece1 in row:
                 hor_direction = 1
@@ -323,19 +324,19 @@ class Checkers():
     """
     def mandatory_eating_move_piece(self, piece1, hor_direction, turn):
         ver_direction = 1
-        position = 0
-        row, col = self.find_piece(piece1.get_mask())
+        position = []
         #La siguiente condicion es para que el codigo solo se ejecute cuando el turno le corresponda a ficha correspondiente
         if (turn == 1 and isinstance(piece1,pieceA.PieceA)) or (turn == 2 and isinstance(piece1,pieceB.PieceB)):
             if piece1.get_queen():
                 while ver_direction <= 2:
+                    row, col = self.find_piece(piece1.get_mask())
                     if hor_direction == 1:
                         self.eat_pieceA(piece1.get_mask(), str(ver_direction))
                     else:
                         self.eat_pieceB(piece1.get_mask(), str(ver_direction))
                     result = self.check_move(piece1, row, col)
                     if result:
-                        position.append([ver_direction, hor_direction])
+                        position.append([str(ver_direction), str(hor_direction)])
                     ver_direction += 1
             else:
                 if isinstance(piece1, pieceA.PieceA):
