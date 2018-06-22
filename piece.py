@@ -2,6 +2,8 @@ class Piece(object):
     def __init__(self, mask):
         self.__mask = mask
         self.__queen = False
+        self.__posX = None
+        self.__posY = None
 
     def __repr__(self):
         return self.__mask
@@ -11,6 +13,18 @@ class Piece(object):
 
     def set_mask(self):
         self.__mask = self.__mask + '+'
+
+    def set_pos_x(self, posX):
+        self.__posX = posX
+
+    def set_pos_y(self, posY):
+        self.__posY = posY
+
+    def get_pos_x(self):
+        return self.__posX
+
+    def get_pos_y(self):
+        return self.__posY
 
     def get_queen(self):
         return self.__queen
